@@ -1,76 +1,65 @@
-# Human API — Expertise Discovery Prototype
+# Human API – Learning Prototype
 
-A small learning prototype that suggests which employee is best suited to a task, based on their skills, past projects and completed work — and explains why. The final decision always stays with a person; the system only recommends.
+A small educational MVP for the Human API project. It demonstrates task submission, transparent keyword-based candidate ranking, and evidence explanations using fictional employee data only.
 
-> Portfolio project by **Abdelrahman Dabash**, based on ideas explored in a university software engineering course (SWE 401). This repository is a personal learning version, not the graded team submission.
+## Team / project context
+- Project: Human API – Intelligent Organizational Expertise Discovery System
+- Students: Abdelrahman Dabash and Fares Farghaly
+- Course context: SWE 401
+- This folder is a learning prototype, not a production HR tool or submission-ready project.
 
-## The problem
-Teams often pick people for a task using job titles, CVs or memory. Those don't always show what someone has actually done. Human API looks at recorded evidence of past work instead, and ranks candidates for a task written in plain language.
+## Key features
+- Submit a task title and natural-language description.
+- Compare task terms with fictional employee skills, project summaries and completed tasks.
+- Return candidates ordered by a deterministic lexical score.
+- Show matched terms, evidence sources and an evidence-strength label.
+- Keep final hiring or assignment decisions with a human manager.
 
-## How it works
-1. A user enters a task title and a description in their own words.
-2. The backend splits the text into words and compares them with each employee's skills, project summaries and completed tasks.
-3. Employees are ranked by the share of task words found in their evidence.
-4. Each result shows the matched words, where the evidence came from, an evidence-strength label (`insufficient`, `limited`, `reasonable`) and a short explanation.
+## Technologies
+- Frontend: React, Vite, JavaScript
+- Backend: Python, FastAPI, Pydantic
+- Tests: pytest, FastAPI TestClient
 
-The score is a transparent keyword indicator, not an AI model and not proof of ability.
+## Prerequisites
+- Python 3.10+
+- Node.js 18+
+- npm
 
-## Tech stack
-- **Backend:** Python, FastAPI, Pydantic
-- **Frontend:** React, Vite
-- **Tests:** pytest with FastAPI's TestClient
-- **Data:** fictional in-memory sample records (no database yet)
+## Installation and run
 
-## API endpoints
-| Method | Path | What it does |
-|---|---|---|
-| GET | `/health` | Service status |
-| GET | `/employees` | List sample employees |
-| GET | `/employees/{id}` | One employee (404 if not found) |
-| POST | `/matches` | Rank employees for `{title, description}` |
-| GET | `/matches/{request_id}` | Fetch an earlier result |
-
-Interactive docs are available at `http://127.0.0.1:8000/docs` while the backend runs.
-
-## Run it locally
-
-**Requirements:** Python 3.10+, Node.js 18+
-
-### Backend
-```powershell
+### 1. Start the backend
+```bash
 cd backend
 python -m venv .venv
-.venv\Scripts\Activate.ps1
+# Windows PowerShell:
+.venv\\Scripts\\Activate.ps1
+# macOS/Linux:
+# source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn main:app --reload
 ```
+The API runs at http://127.0.0.1:8000. Interactive API docs: http://127.0.0.1:8000/docs.
 
-### Frontend (second terminal)
-```powershell
+### 2. Start the frontend in a second terminal
+```bash
 cd frontend
 npm install
 npm run dev
 ```
-Open the address Vite prints (usually `http://localhost:5173`).
+Open the local URL printed by Vite (usually http://localhost:5173).
 
-## Tests
-```powershell
-cd backend
+## Configuration
+The learning MVP uses fictional in-memory sample records and does not connect to PostgreSQL. This keeps the demonstration easy to run. The Phase 4 design document specifies PostgreSQL as the intended persistent database for the next implementation increment. Do not use real employee information in this demo.
+
+## How to test
+From the `backend` directory, with the virtual environment active:
+```bash
 pytest -q
 ```
-The tests cover the health check, listing employees, ranked matching with explanations, rejecting an empty title, and the 404 for an unknown employee.
+Tests cover health status, employee listing, matching output, required-field validation and unknown employee handling. Capture your own terminal output and screenshots after running the tests; do not claim tests passed before execution.
 
-## Known limitations
-- Keyword matching only: no synonyms, no stemming, and common words count as matches.
-- Employees with no matching evidence are still listed with a 0% score.
-- No login, roles or persistent database; data resets when the server restarts.
-- The frontend calls the backend on a fixed address (`127.0.0.1:8000`) and needs CORS enabled on the backend to work in the browser.
+## Matching method and limitations
+The prototype tokenizes the task title and description and calculates a simple overlap percentage against employee skills, project summaries and completed tasks. The score is a keyword indicator only. It is not a trained AI model, does not establish actual competence, and must not be used to make employment decisions. The prototype has no authentication, role-based authorization, audit logging, persistent database, or production security controls.
 
-## Ideas for next steps
-- Add CORS, a stop-word list and better tokenizing
-- Show a clear "no match" message instead of 0% candidates
-- Store data in PostgreSQL and add sign-in with roles
-- Add tests that check the *right* person ranks first
-
-## Privacy
-All employee records are fictional. Never add real personal data, passwords or API keys to this repository.
+## Privacy and security
+All records are fictional. Never commit passwords, API keys, tokens, real employee records or private company information. Any future deployment requires authentication, authorization, secure storage, retention rules, fairness evaluation and human oversight.\n
